@@ -1,0 +1,13 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="STranslate_Plugin_Ocr_WindowsMedia_Feature">Feature</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Ocr_WindowsMedia_Feature_Description">Built-in Windows 10/11 native OCR API. Fully offline, 0ms network latency, fast recognition.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Ocr_WindowsMedia_Language">Preferred Language</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Ocr_WindowsMedia_Language_Description">Select preferred recognition language (Auto uses system user profile language)</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Ocr_WindowsMedia_InstalledLangs">Installed OCR Language Packs</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Ocr_WindowsMedia_InstalledLangs_Description">List of OCR language packs detected on this Windows system</sys:String>
+
+</ResourceDictionary>

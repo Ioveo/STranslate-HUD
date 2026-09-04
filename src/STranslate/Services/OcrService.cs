@@ -28,9 +28,20 @@ public partial class OcrService : BaseService
     }
 
     private void InitialOtherService()
-        => ImageTranslateOcrService = Services.FirstOrDefault(s =>
+    {
+        ImageTranslateOcrService = Services.FirstOrDefault(s =>
             s.ServiceID == _serviceSettings.ImageTranslateOcrSvcID &&
             IsImageTranslateOcrService(s));
+
+        if (ImageTranslateOcrService == null)
+        {
+            var defaultOcr = Services.FirstOrDefault(s => s.IsEnabled && IsImageTranslateOcrService(s));
+            if (defaultOcr != null)
+            {
+                ActiveImTranOcr(defaultOcr);
+            }
+        }
+    }
 
     public override async Task<bool> DeleteAsync(Service service)
     {
@@ -43,6 +54,22 @@ public partial class OcrService : BaseService
         }
 
         return result;
+    }
+
+    public IOcrPlugin? GetActiveOrFallbackOcr()
+    {
+        var active = GetActiveSvc<IOcrPlugin>();
+        if (active != null) return active;
+
+        var fallbackMeta = Plugins.FirstOrDefault(p => p.PluginType != null && typeof(IOcrPlugin).IsAssignableFrom(p.PluginType));
+        if (fallbackMeta != null)
+        {
+            var svc = AddFromPlugin(fallbackMeta);
+            svc.IsEnabled = true;
+            return svc.Plugin as IOcrPlugin;
+        }
+
+        return null;
     }
 
     internal void ActiveImTranOcr(Service svc)

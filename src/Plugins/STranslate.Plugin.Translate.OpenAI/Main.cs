@@ -178,7 +178,8 @@ public class Main : LlmTranslatePluginBase
         };
 
         StringBuilder sb = new();
-        var isThink = false;
+        var insideThinkTag = false;
+        var rawBuffer = new StringBuilder();
 
         await foreach (var msg in Context.HttpService.StreamPostAsyncEnumerable(
             url,
@@ -190,31 +191,113 @@ public class Main : LlmTranslatePluginBase
             if (!string.IsNullOrWhiteSpace(streamEvent.ErrorMessage))
                 throw new InvalidOperationException(streamEvent.ErrorMessage);
 
+            // 过滤 DeepSeek R1 / 硅基流动等输出的 reasoning_content
+            if (!string.IsNullOrEmpty(streamEvent.ReasoningDelta))
+                continue;
+
             var contentValue = streamEvent.TextDelta;
             if (string.IsNullOrEmpty(contentValue))
                 continue;
 
-            if (contentValue.Trim() == "<think>")
+            rawBuffer.Append(contentValue);
+            var bufferStr = rawBuffer.ToString();
+
+            while (bufferStr.Length > 0)
             {
-                isThink = true;
-                continue;
-            }
+                if (insideThinkTag)
+                {
+                    var endIdx = bufferStr.IndexOf("</think>", StringComparison.OrdinalIgnoreCase);
+                    if (endIdx >= 0)
+                    {
+                        insideThinkTag = false;
+                        bufferStr = bufferStr[(endIdx + 8)..];
+                        rawBuffer.Clear();
+                        rawBuffer.Append(bufferStr);
+                    }
+                    else
+                    {
+                        var partialMatch = false;
+                        for (var len = Math.Min(7, bufferStr.Length); len > 0; len--)
+                        {
+                            if ("</think>".StartsWith(bufferStr[^len..], StringComparison.OrdinalIgnoreCase))
+                            {
+                                rawBuffer.Clear();
+                                rawBuffer.Append(bufferStr[^len..]);
+                                partialMatch = true;
+                                break;
+                            }
+                        }
+                        if (!partialMatch)
+                            rawBuffer.Clear();
+                        break;
+                    }
+                }
+                else
+                {
+                    var startIdx = bufferStr.IndexOf("<think>", StringComparison.OrdinalIgnoreCase);
+                    if (startIdx >= 0)
+                    {
+                        var before = bufferStr[..startIdx];
+                        if (before.Length > 0)
+                        {
+                            if (sb.Length > 0 || !string.IsNullOrWhiteSpace(before))
+                            {
+                                sb.Append(before);
+                                onTextUpdated?.Invoke(sb.ToString());
+                            }
+                        }
+                        insideThinkTag = true;
+                        bufferStr = bufferStr[(startIdx + 7)..];
+                        rawBuffer.Clear();
+                        rawBuffer.Append(bufferStr);
+                    }
+                    else
+                    {
+                        var partialMatch = false;
+                        for (var len = Math.Min(6, bufferStr.Length); len > 0; len--)
+                        {
+                            if ("<think>".StartsWith(bufferStr[^len..], StringComparison.OrdinalIgnoreCase))
+                            {
+                                var safePart = bufferStr[..^len];
+                                if (safePart.Length > 0)
+                                {
+                                    if (sb.Length > 0 || !string.IsNullOrWhiteSpace(safePart))
+                                    {
+                                        sb.Append(safePart);
+                                        onTextUpdated?.Invoke(sb.ToString());
+                                    }
+                                }
+                                rawBuffer.Clear();
+                                rawBuffer.Append(bufferStr[^len..]);
+                                partialMatch = true;
+                                break;
+                            }
+                        }
 
-            if (contentValue.Trim() == "</think>")
+                        if (!partialMatch)
+                        {
+                            if (sb.Length > 0 || !string.IsNullOrWhiteSpace(bufferStr))
+                            {
+                                sb.Append(bufferStr);
+                                onTextUpdated?.Invoke(sb.ToString());
+                            }
+                            rawBuffer.Clear();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 刷新剩余未处理的非 think 字符
+        if (!insideThinkTag && rawBuffer.Length > 0)
+        {
+            var remaining = rawBuffer.ToString();
+            if (sb.Length > 0 || !string.IsNullOrWhiteSpace(remaining))
             {
-                isThink = false;
-                continue;
+                sb.Append(remaining);
+                onTextUpdated?.Invoke(sb.ToString());
             }
-
-            if (isThink)
-                continue;
-
-            // 优化推理内容结束后的前导空白。
-            if (sb.Length == 0 && string.IsNullOrWhiteSpace(contentValue))
-                continue;
-
-            sb.Append(contentValue);
-            onTextUpdated?.Invoke(sb.ToString());
         }
 
         if (sb.Length == 0)

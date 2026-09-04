@@ -1,0 +1,44 @@
+<Window
+    x:Class="STranslate.Views.LiveHudOverlayWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    Title="Live HUD Overlay"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="NoResize"
+    ShowActivated="False"
+    ShowInTaskbar="False"
+    SnapsToDevicePixels="True"
+    Topmost="True"
+    UseLayoutRounding="True"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+        <!-- 承载原位翻译覆盖标签的画布 -->
+        <Canvas x:Name="OverlayCanvas" Background="Transparent" />
+
+        <!-- 顶部轻量浮动状态胶囊与关闭提示 -->
+        <Border
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,8,12,0"
+            Background="#E6202020"
+            BorderBrush="#44FFFFFF"
+            BorderThickness="1"
+            CornerRadius="14"
+            Padding="10,4">
+            <StackPanel Orientation="Horizontal">
+                <Ellipse Width="6" Height="6" Fill="#4CAF50" Margin="0,0,6,0" VerticalAlignment="Center" />
+                <TextBlock
+                    Text="HUD 贴面翻译中 (按 Esc 退出)"
+                    FontSize="11"
+                    Foreground="#E0E0E0"
+                    VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

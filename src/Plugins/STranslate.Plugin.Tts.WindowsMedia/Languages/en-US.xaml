@@ -1,0 +1,15 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Feature">Offline Feature</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Feature_Description">Built-in Windows 10/11 OneCore/SAPI speech synthesizer. Zero network latency, fully offline.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Voice">System Voice</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Voice_Description">Select installed Windows voice persona</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Speed">Speed</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Speed_Description">Adjust speech speed rate</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Volume">Volume</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Volume_Description">Adjust speech playback volume</sys:String>
+
+</ResourceDictionary>

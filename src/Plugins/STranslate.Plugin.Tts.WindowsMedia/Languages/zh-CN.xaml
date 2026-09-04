@@ -1,0 +1,15 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Feature">离线特性</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Feature_Description">基于 Windows 10/11 系统 OneCore/SAPI 语音库，0 延迟、无需联网、稳定发音</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Voice">系统发音人</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Voice_Description">选择 Windows 已安装的系统发音人语音包</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Speed">朗读语速</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Speed_Description">调节语音朗读语速倍率</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Volume">朗读音量</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_WindowsMedia_Volume_Description">调节发音人输出音量</sys:String>
+
+</ResourceDictionary>

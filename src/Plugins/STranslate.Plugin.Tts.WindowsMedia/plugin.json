@@ -1,0 +1,10 @@
+{
+  "PluginID": "6ea48d8869154a43a8870197ec6df1c0",
+  "Name": "Windows TTS (离线)",
+  "Description": "Windows 10/11 原生离线语音合成朗读插件，0延迟、免联网、稳定流畅",
+  "Author": "STranslate",
+  "Version": "1.0.0",
+  "Website": "https://github.com/STranslate/STranslate",
+  "ExecuteFileName": "STranslate.Plugin.Tts.WindowsMedia.dll",
+  "IconPath": "icon.png"
+}

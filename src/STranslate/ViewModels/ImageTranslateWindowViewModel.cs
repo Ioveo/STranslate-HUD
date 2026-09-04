@@ -56,7 +56,7 @@ public partial class ImageTranslateWindowViewModel : ObservableObject, IDisposab
         RefreshSelectedOcrEngine();
         _transCollectionView = new() { Source = _translateService.Services };
         _transCollectionView.Filter += OnTransFilter;
-        SelectedTranslateEngine = _translateService.ImageTranslateService;
+        SelectedTranslateEngine = _translateService.GetImageTranslateServiceOrDefault();
 
         _ocrService.Services.CollectionChanged += OnOcrServicesCollectionChanged;
         foreach (var service in _ocrService.Services)
@@ -117,6 +117,11 @@ public partial class ImageTranslateWindowViewModel : ObservableObject, IDisposab
     /// </summary>
     [ObservableProperty]
     public partial string Result { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool IsPeekingOriginal { get; set; } = false;
+
+    partial void OnIsPeekingOriginalChanged(bool value) => RefreshDisplayState();
 
     [ObservableProperty]
     public partial ObservableCollection<OcrWord> OcrWords { get; set; } = [];
@@ -210,7 +215,8 @@ public partial class ImageTranslateWindowViewModel : ObservableObject, IDisposab
             // 生成分段后的标注图像（显示合并后的边框）
             _annotatedImage = ImageTranslateRenderer.GenerateAnnotatedImage(_lastOcrResult, _sourceImage);
 
-            if (_translateService.ImageTranslateService?.Plugin is not ITranslatePlugin tranSvc)
+            var targetTranslateService = _translateService.GetImageTranslateServiceOrDefault();
+            if (targetTranslateService?.Plugin is not ITranslatePlugin tranSvc)
             {
                 _snackbar.ShowWarning(_i18n.GetTranslation("NoTranslateService"));
                 return;
@@ -263,9 +269,9 @@ public partial class ImageTranslateWindowViewModel : ObservableObject, IDisposab
             _lastOcrResult.OcrContents.Clear();
             _lastOcrResult.OcrContents.AddRange(layoutBlocks.Select(x => x.ToOcrContent()));
 
-            // 生成原图坐标系中的矢量译文覆盖文档，不再创建超采样结果位图。
+            // 生成原图坐标系中的矢量译文覆盖文档，使用原图局部色彩采样实现自然融合。
             _resultOverlayDocument = ImageTranslateRenderer.CreateTranslatedOverlay(
-                layoutBlocks, GetOverlayTheme());
+                layoutBlocks, GetOverlayTheme(), _sourceImage);
             _translatedSelectionWords = new ObservableCollection<OcrWord>(
                 _resultOverlayDocument.SelectableWords);
             Result = _lastOcrResult.Text;
@@ -671,6 +677,14 @@ public partial class ImageTranslateWindowViewModel : ObservableObject, IDisposab
 
     private void RefreshDisplayState()
     {
+        if (IsPeekingOriginal)
+        {
+            DisplayImage = _sourceImage;
+            DisplayOverlayDocument = null;
+            OcrWords = _originalSelectionWords;
+            return;
+        }
+
         if (Settings.IsImTranShowingAnnotated)
         {
             DisplayImage = _annotatedImage ?? _sourceImage;

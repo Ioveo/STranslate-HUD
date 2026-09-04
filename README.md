@@ -20,21 +20,31 @@
 </a>
 </p>
 
-<h1 align="center">STranslate 2.0</h1>
+<h1 align="center">STranslate-HUD</h1>
 
 **English** | [**简体中文**](./README_ZH.md)
 
-<p align="center">
-  <a href="https://trendshift.io/repositories/15843" target="_blank">
-    <img src="https://trendshift.io/api/badge/repositories/15843" alt="STranslate%2FSTranslate | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/>
-  </a>
+<p align="center">A supercharged, zero-friction desktop translation ecosystem based on STranslate: featuring <strong>Live HUD Overlay translation</strong>, <strong>smart cursor hover radar</strong>, <strong>in-place color-adaptive image translation</strong>, and <strong>native offline WinRT integration</strong>.</p>
 
-  <a href="https://hellogithub.com/repository/STranslate/STranslate" target="_blank">
-    <img src="https://api.hellogithub.com/v1/widgets/recommend.svg?rid=2af2034bb1e84122aac1d39046be20ec&claim_uid=WnBC6wua27iPR9t&theme=neutral" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" />
-  </a>
-</p>
+> **Credits**: Forked and enhanced from the open-source project [STranslate](https://github.com/STranslate/STranslate) by @zggsong with utmost respect.
 
-<p align="center">A <strong>ready-to-go</strong> translation and OCR tool developed with WPF.</p>
+### 🚀 Key Supercharged Features
+
+1. **Live HUD In-Place Software Overlay (`Alt + Shift + H`)**:
+   - Zero-invasion real-time localization for any English-only desktop app. Automatically detects all UI elements (with full-window offline OCR fallback) and overlays crisp translated badges.
+   - **Full mouse click-through**: use the target app normally with real-time window tracking.
+2. **Hover Translate Radar (`Alt + H`)**:
+   - Zero-click, zero-selection, zero-copy: just pause cursor on any English word, button, or menu for 0.3s to view instant translation pill.
+3. **In-Place Color-Adaptive Image Translation (`Alt + Shift + X`)**:
+   - Smart edge-color sampling (`ImageColorSampler`) seamlessly blending translated badges with original backgrounds.
+4. **Native Offline WindowsMedia OCR & TTS**:
+   - Built on WinRT native APIs. Offline, lightning-fast multi-point OCR and natural voice speech synthesis.
+5. **Academic & Developer Text Preprocessing**:
+   - PDF newline/hyphen healing, code camelCase identifier splitting, and LaTeX formula / Markdown shielding.
+6. **AI Reasoning Process Stripping**:
+   - Automatically filters reasoning chains (`<think>`) from modern reasoning models like DeepSeek-R1.
+7. **Multi-Format Vocabulary Export**:
+   - One-click export to Anki flashcards, Markdown, and CSV formats.
 
 </div>
 

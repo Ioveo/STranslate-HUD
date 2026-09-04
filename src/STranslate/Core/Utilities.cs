@@ -206,30 +206,13 @@ public class Utilities
     }
 
     /// <summary>
-    /// 规范化给定的文本，通过移除或替换某些字符和模式。
-    /// <see href="https://github1s.com/CopyTranslator/CopyTranslator/blob/master/src/common/translate/helper.ts#L172"/>
+    /// 智能规范化给定的文本，自动修复 PDF 复制产生的硬断行、断词与连字符。
     /// </summary>
     /// <param name="text">要规范的源文本。</param>
     /// <returns>规范化后的文本。</returns>
     public static string NormalizeText(string text)
     {
-        // 将所有的回车换行符替换为换行符
-        text = text.Replace("\r\n", "\n");
-        // 将所有的回车符替换为换行符
-        text = text.Replace("\r", "\n");
-        // 将所有的连字符换行符组合替换为空字符串
-        text = text.Replace("-\n", "");
-
-        // 遍历每个正则表达式模式，并进行替换
-        text = Patterns.Aggregate(text, (current, pattern) => pattern.Replace(current, "#$1#"));
-
-        // 将所有的换行符替换为空格
-        text = text.Replace("\n", " ");
-        // 使用sentenceEnds正则表达式进行替换
-        text = SentenceEnds.Replace(text, "$1\n");
-
-        // 返回处理后的字符串
-        return text;
+        return Helpers.SmartTextPreprocessor.RepairPdfLineBreaks(text);
     }
 
     /// <summary>

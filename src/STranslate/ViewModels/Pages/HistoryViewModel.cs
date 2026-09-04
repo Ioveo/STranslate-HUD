@@ -262,9 +262,9 @@ public partial class HistoryViewModel : ObservableObject, IDisposable
         var saveFileDialog = new SaveFileDialog
         {
             Title = _i18n.GetTranslation("SaveAs"),
-            Filter = "CSV Files (*.csv)|*.csv",
+            Filter = "CSV 表格 (*.csv)|*.csv|Anki 卡片包 (*.tsv;*.txt)|*.tsv;*.txt|Markdown 笔记 (*.md)|*.md",
             DefaultExt = ".csv",
-            FileName = $"stranslate_history_{DateTime.Now:yyyyMMddHHmmss}.csv",
+            FileName = $"stranslate_export_{DateTime.Now:yyyyMMddHHmmss}.csv",
             DefaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
             AddToRecent = true
         };
@@ -274,8 +274,22 @@ public partial class HistoryViewModel : ObservableObject, IDisposable
 
         try
         {
-            var csv = HistoryCsvHelper.BuildCsv(exportItems, GetLanguageDisplayName);
-            await File.WriteAllTextAsync(saveFileDialog.FileName, csv, HistoryCsvHelper.Utf8BomEncoding);
+            var ext = Path.GetExtension(saveFileDialog.FileName).ToLowerInvariant();
+            string content;
+            if (ext is ".tsv" or ".txt")
+            {
+                content = VocabularyExportHelper.ExportToAnkiTsv(exportItems);
+            }
+            else if (ext is ".md")
+            {
+                content = VocabularyExportHelper.ExportToMarkdown(exportItems);
+            }
+            else
+            {
+                content = HistoryCsvHelper.BuildCsv(exportItems, GetLanguageDisplayName);
+            }
+
+            await VocabularyExportHelper.SaveToFileAsync(saveFileDialog.FileName, content);
 
             _snackbar.ShowSuccess(_i18n.GetTranslation("ExportSuccess"));
             if (clearSelection)

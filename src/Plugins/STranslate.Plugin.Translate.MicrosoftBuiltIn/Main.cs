@@ -79,7 +79,7 @@ public class Main : TranslatePluginBase
 
     public override string? GetTargetLanguage(LangEnum langEnum) => langEnum switch
     {
-        LangEnum.Auto => "auto",
+        LangEnum.Auto => "zh-Hans",
         LangEnum.ChineseSimplified => "zh-Hans",
         LangEnum.ChineseTraditional => "zh-Hant",
         LangEnum.Cantonese => null,

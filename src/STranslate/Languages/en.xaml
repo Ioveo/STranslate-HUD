@@ -197,6 +197,10 @@
     <sys:String x:Key="Hotkey_OcrDescription">Hotkey for opening the OCR window to recognize text.</sys:String>
     <sys:String x:Key="Hotkey_ClipboardMonitor">Clipboard Monitor Translate</sys:String>
     <sys:String x:Key="Hotkey_ClipboardMonitorDescription">Toggle clipboard monitoring. When enabled, clipboard changes will trigger automatic translation.</sys:String>
+    <sys:String x:Key="Hotkey_HoverTranslate">Hover Translate (Radar)</sys:String>
+    <sys:String x:Key="Hotkey_HoverTranslateDescription">Toggle mouse hover radar translation; hovering over controls displays Chinese tooltip.</sys:String>
+    <sys:String x:Key="Hotkey_LiveHudTranslate">Window Live HUD Overlay</sys:String>
+    <sys:String x:Key="Hotkey_LiveHudTranslateDescription">Generate real-time transparent click-through HUD translation overlay for active window. Press Esc to exit.</sys:String>
     <sys:String x:Key="ClipboardMonitorStarted">Clipboard monitoring started</sys:String>
     <sys:String x:Key="ClipboardMonitorStopped">Clipboard monitoring stopped</sys:String>
     <sys:String x:Key="ClipboardMonitorButtonTooltip">Clipboard Monitor Translate</sys:String>

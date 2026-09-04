@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using iNKORE.UI.WPF.Modern;
 using Microsoft.Extensions.Logging;
@@ -272,6 +273,39 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     }
 
     public bool CanTranslate => !string.IsNullOrWhiteSpace(InputText);
+
+    [ObservableProperty]
+    public partial string CurrentScenarioMode { get; set; } = "翻译";
+
+    public List<string> AvailableScenarioModes { get; } = ["翻译", "学术精译", "代码与文档", "润色", "语法纠错与精析", "总结"];
+
+    [RelayCommand]
+    public async Task SwitchScenarioModeAsync(string modeName)
+    {
+        if (string.IsNullOrWhiteSpace(modeName))
+            return;
+
+        CurrentScenarioMode = modeName;
+        var changed = false;
+
+        foreach (var service in TranslateService.Services)
+        {
+            if (service.Plugin is ILlm llm)
+            {
+                var targetPrompt = llm.Prompts.FirstOrDefault(p => p.Name.Equals(modeName, StringComparison.OrdinalIgnoreCase) || p.Name.Contains(modeName, StringComparison.OrdinalIgnoreCase));
+                if (targetPrompt != null && llm.SelectedPrompt != targetPrompt)
+                {
+                    llm.SelectedPrompt = targetPrompt;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed && !string.IsNullOrWhiteSpace(InputText))
+        {
+            await TranslateCommand.ExecuteAsync(null);
+        }
+    }
 
     #endregion
 
@@ -1233,7 +1267,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         if (ocrPlugin == null)
             return;
 
-        if (TranslateService.ImageTranslateService == null)
+        if (TranslateService.GetImageTranslateServiceOrDefault() == null)
         {
             Helper.PromptConfigureService(
                 _i18n.GetTranslation("ImageTranslateServiceNotFoundTitle"),
@@ -2106,6 +2140,24 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 
     [RelayCommand]
     private void ToggleTopmost() => IsTopmost = !IsTopmost;
+
+    [RelayCommand]
+    private void ToggleHoverTranslate()
+    {
+        var hoverSvc = Ioc.Default.GetRequiredService<Services.HoverTranslateService>();
+        var isStarted = hoverSvc.Toggle();
+        if (isStarted)
+            _snackbar.ShowSuccess("已开启鼠标悬停即指即翻（鼠标雷达）");
+        else
+            _snackbar.ShowSuccess("已关闭鼠标悬停即指即翻");
+    }
+
+    [RelayCommand]
+    private async Task ToggleLiveHudTranslateAsync()
+    {
+        var hudSvc = Ioc.Default.GetRequiredService<Services.LiveHudTranslateService>();
+        await hudSvc.ToggleHudForForegroundWindowAsync();
+    }
 
     [RelayCommand]
     private void ToggleHideInput() => IsInputActuallyHidden = !IsInputActuallyHidden;

@@ -109,6 +109,8 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
                     services.AddSingleton<Internationalization>();
                     services.AddSingleton<MouseHookService>();
                     services.AddSingleton<MouseSelectionService>();
+                    services.AddSingleton<HoverTranslateService>();
+                    services.AddSingleton<LiveHudTranslateService>();
 
                     // 注册HTTP客户端
                     services.AddHttpClient(Constant.HttpClientName, client =>

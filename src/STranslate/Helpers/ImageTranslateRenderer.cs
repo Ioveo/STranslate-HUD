@@ -81,10 +81,12 @@ internal static class ImageTranslateRenderer
     /// </summary>
     /// <param name="layoutBlocks">包含翻译后文本的布局块</param>
     /// <param name="overlayTheme">覆盖层主题（明/暗）</param>
+    /// <param name="sourceImage">原图位图（用于局部背景取色与自适应前景色）</param>
     /// <returns>矢量绘制项及原图坐标系中的可选译文字符</returns>
     internal static ImageTranslateOverlayDocument CreateTranslatedOverlay(
         IReadOnlyList<OcrLayoutBlock> layoutBlocks,
-        ImageTranslateOverlayTheme overlayTheme)
+        ImageTranslateOverlayTheme overlayTheme,
+        BitmapSource? sourceImage = null)
     {
         if (layoutBlocks.Count == 0 ||
             layoutBlocks.All(x => x.BoxPoints.Count == 0))
@@ -97,7 +99,7 @@ internal static class ImageTranslateRenderer
         measureTextBrush.Freeze();
         var overlays = layoutBlocks
             .Where(item => item.BoxPoints.Count > 0 && !string.IsNullOrEmpty(item.Text))
-            .Select(item => CreateTranslatedTextOverlay(item, overlayTheme, pixelsPerDip, measureTextBrush))
+            .Select(item => CreateTranslatedTextOverlay(item, overlayTheme, pixelsPerDip, measureTextBrush, sourceImage))
             .Where(item => item != null)
             .Select(item => item!)
             .ToList();
@@ -179,11 +181,16 @@ internal static class ImageTranslateRenderer
         OcrLayoutBlock content,
         ImageTranslateOverlayTheme overlayTheme,
         double pixelsPerDip,
-        Brush measureTextBrush)
+        Brush measureTextBrush,
+        BitmapSource? sourceImage = null)
     {
         var boundingRect = BoxPointLayout.BoundingRect(content.BoxPoints);
         if (boundingRect.IsEmpty || boundingRect.Width <= 0 || boundingRect.Height <= 0)
             return null;
+
+        var customColors = sourceImage != null
+            ? ImageColorSampler.SampleColors(sourceImage, boundingRect, overlayTheme)
+            : ((Color BackgroundColor, Color ForegroundColor)?)null;
 
         var plan = ImageTranslateTextOverlayLayout.Create(
             content,
@@ -196,7 +203,8 @@ internal static class ImageTranslateRenderer
                 pixelsPerDip,
                 isMultiLine ? fontSize * ImageTranslateTextOverlayPlan.MultilineLineHeightScale : 0,
                 isMultiLine ? 0 : 1),
-            overlayTheme);
+            overlayTheme,
+            customColors);
 
         var textBrush = new SolidColorBrush(plan.ForegroundColor);
         textBrush.Freeze();

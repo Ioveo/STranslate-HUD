@@ -37,6 +37,26 @@ public partial class ImageTranslateWindow
             ModernWindowLifecycle.DetachModernWindowStyle(this);
     }
 
+    protected override void OnPreviewKeyDown(System.Windows.Input.KeyEventArgs e)
+    {
+        base.OnPreviewKeyDown(e);
+        if (e.Key == System.Windows.Input.Key.Space && !e.IsRepeat && !(System.Windows.Input.Keyboard.FocusedElement is System.Windows.Controls.TextBox))
+        {
+            _viewModel.IsPeekingOriginal = true;
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnPreviewKeyUp(System.Windows.Input.KeyEventArgs e)
+    {
+        base.OnPreviewKeyUp(e);
+        if (e.Key == System.Windows.Input.Key.Space && !(System.Windows.Input.Keyboard.FocusedElement is System.Windows.Controls.TextBox))
+        {
+            _viewModel.IsPeekingOriginal = false;
+            e.Handled = true;
+        }
+    }
+
     protected override void OnClosed(EventArgs e)
     {
         // VM 由独立 DI scope 持有，释放 scope 会触发 ViewModel.Dispose()，

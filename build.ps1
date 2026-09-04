@@ -88,4 +88,4 @@ if (Test-Path $pluginsPath) {
         Remove-Item -Force -ErrorAction SilentlyContinue
 }
 
-Log "构建完成！" "Green"
+Log "Build finished successfully!" "Green"

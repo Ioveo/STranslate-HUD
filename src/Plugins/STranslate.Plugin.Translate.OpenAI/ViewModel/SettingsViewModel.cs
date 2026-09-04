@@ -145,6 +145,71 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         }
     }
 
+    [RelayCommand]
+    public void ApplyPreset(string preset)
+    {
+        using var _ = new UpdateGuard(this);
+        switch (preset)
+        {
+            case "DeepSeek":
+                Url = "https://api.deepseek.com";
+                Models.Clear();
+                Models.Add("deepseek-chat");
+                Models.Add("deepseek-reasoner");
+                Model = "deepseek-chat";
+                Temperature = 1.3;
+                break;
+            case "SiliconFlow":
+                Url = "https://api.siliconflow.cn";
+                Models.Clear();
+                Models.Add("deepseek-ai/DeepSeek-V3");
+                Models.Add("deepseek-ai/DeepSeek-R1");
+                Models.Add("Qwen/Qwen2.5-72B-Instruct");
+                Models.Add("THUDM/glm-4-9b-chat");
+                Model = "deepseek-ai/DeepSeek-V3";
+                Temperature = 0.7;
+                break;
+            case "Ollama":
+                Url = "http://127.0.0.1:11434";
+                Models.Clear();
+                Models.Add("deepseek-r1");
+                Models.Add("qwen2.5");
+                Models.Add("llama3.3");
+                Model = "deepseek-r1";
+                Temperature = 0.7;
+                break;
+            case "OpenAI":
+                Url = "https://api.openai.com";
+                Models.Clear();
+                Models.Add("gpt-4o");
+                Models.Add("gpt-4o-mini");
+                Models.Add("o3-mini");
+                Model = "gpt-4o";
+                Temperature = 0.7;
+                break;
+            case "DashScope":
+                Url = "https://dashscope.aliyuncs.com/compatible-mode";
+                Models.Clear();
+                Models.Add("qwen-plus");
+                Models.Add("qwen-max");
+                Models.Add("qwen-turbo");
+                Model = "qwen-plus";
+                Temperature = 0.7;
+                break;
+            case "Moonshot":
+                Url = "https://api.moonshot.cn";
+                Models.Clear();
+                Models.Add("moonshot-v1-8k");
+                Models.Add("moonshot-v1-32k");
+                Model = "moonshot-v1-8k";
+                Temperature = 0.3;
+                break;
+        }
+        _settings.Models = [.. Models];
+        _context.SaveSettingStorage<Settings>();
+    }
+
+
 
     public void Dispose()
     {

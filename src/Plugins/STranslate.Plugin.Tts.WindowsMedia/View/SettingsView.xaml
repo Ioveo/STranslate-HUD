@@ -1,0 +1,73 @@
+<UserControl
+    x:Class="STranslate.Plugin.Tts.WindowsMedia.View.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:vm="clr-namespace:STranslate.Plugin.Tts.WindowsMedia.ViewModel"
+    d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <ikw:SimpleStackPanel Spacing="12">
+        <ui:SettingsCard Description="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Feature_Description}" Header="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Feature}">
+            <ui:SettingsCard.HeaderIcon>
+                <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Speaker2_24_Regular}" />
+            </ui:SettingsCard.HeaderIcon>
+            <Button
+                Command="{Binding TestAudioCommand}"
+                Content="试听播放"
+                Style="{DynamicResource AccentButtonStyle}" />
+        </ui:SettingsCard>
+
+        <ui:SettingsCard Description="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Voice_Description}" Header="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Voice}">
+            <ui:SettingsCard.HeaderIcon>
+                <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.PersonVoice_24_Regular}" />
+            </ui:SettingsCard.HeaderIcon>
+            <ComboBox
+                MinWidth="280"
+                DisplayMemberPath="FullTitle"
+                ItemsSource="{Binding VoiceOptions}"
+                SelectedItem="{Binding SelectedVoice}" />
+        </ui:SettingsCard>
+
+        <ui:SettingsCard Description="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Speed_Description}" Header="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Speed}">
+            <ui:SettingsCard.HeaderIcon>
+                <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Gauge_20_Regular}" />
+            </ui:SettingsCard.HeaderIcon>
+            <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="8">
+                <Slider
+                    Width="160"
+                    Maximum="3.0"
+                    Minimum="0.5"
+                    SmallChange="0.1"
+                    Value="{Binding Speed}" />
+                <TextBlock
+                    Width="40"
+                    VerticalAlignment="Center"
+                    Text="{Binding Speed, StringFormat={}{0:F1}x}" />
+            </ikw:SimpleStackPanel>
+        </ui:SettingsCard>
+
+        <ui:SettingsCard Description="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Volume_Description}" Header="{DynamicResource STranslate_Plugin_Tts_WindowsMedia_Volume}">
+            <ui:SettingsCard.HeaderIcon>
+                <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.DesktopSpeaker_24_Regular}" />
+            </ui:SettingsCard.HeaderIcon>
+            <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="8">
+                <Slider
+                    Width="160"
+                    Maximum="100"
+                    Minimum="0"
+                    SmallChange="5"
+                    Value="{Binding Volume}" />
+                <TextBlock
+                    Width="40"
+                    VerticalAlignment="Center"
+                    Text="{Binding Volume, StringFormat={}{0:F0}%}" />
+            </ikw:SimpleStackPanel>
+        </ui:SettingsCard>
+    </ikw:SimpleStackPanel>
+</UserControl>

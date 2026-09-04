@@ -197,6 +197,10 @@
     <sys:String x:Key="Hotkey_OcrDescription">用于调用OCR窗口进行文本识别的快捷键。</sys:String>
     <sys:String x:Key="Hotkey_ClipboardMonitor">剪贴板监听翻译</sys:String>
     <sys:String x:Key="Hotkey_ClipboardMonitorDescription">开启/关闭剪贴板监听，监听开启时剪贴板变化会自动翻译。</sys:String>
+    <sys:String x:Key="Hotkey_HoverTranslate">鼠标悬停即指即翻</sys:String>
+    <sys:String x:Key="Hotkey_HoverTranslateDescription">开启/关闭鼠标雷达探测翻译，鼠标停留在英文控件上自动弹出中文释义。</sys:String>
+    <sys:String x:Key="Hotkey_LiveHudTranslate">窗口跟随贴面翻译</sys:String>
+    <sys:String x:Key="Hotkey_LiveHudTranslateDescription">对当前激活的前台全英文软件窗口生成实时透明贴面翻译，按 Esc 退出。</sys:String>
     <sys:String x:Key="ClipboardMonitorStarted">剪贴板监听已开启</sys:String>
     <sys:String x:Key="ClipboardMonitorStopped">剪贴板监听已关闭</sys:String>
     <sys:String x:Key="ClipboardMonitorButtonTooltip">剪贴板监听翻译</sys:String>

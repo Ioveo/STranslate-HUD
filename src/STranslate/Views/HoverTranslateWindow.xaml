@@ -1,0 +1,115 @@
+<Window
+    x:Class="STranslate.Views.HoverTranslateWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    Title="Hover Translate"
+    MinWidth="140"
+    MaxWidth="400"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="NoResize"
+    ShowActivated="False"
+    ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
+    SnapsToDevicePixels="True"
+    Topmost="True"
+    UseLayoutRounding="True"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <Storyboard x:Key="FadeInStoryboard">
+            <DoubleAnimation
+                Storyboard.TargetName="ContainerBorder"
+                Storyboard.TargetProperty="Opacity"
+                From="0.0"
+                To="1.0"
+                Duration="0:0:0.15" />
+            <DoubleAnimation
+                Storyboard.TargetName="ContainerScale"
+                Storyboard.TargetProperty="ScaleX"
+                From="0.92"
+                To="1.0"
+                Duration="0:0:0.15" />
+            <DoubleAnimation
+                Storyboard.TargetName="ContainerScale"
+                Storyboard.TargetProperty="ScaleY"
+                From="0.92"
+                To="1.0"
+                Duration="0:0:0.15" />
+        </Storyboard>
+    </Window.Resources>
+
+    <Grid Background="Transparent" Margin="8">
+        <Border
+            x:Name="ContainerBorder"
+            Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorDefaultBrushKey}}"
+            BorderBrush="{DynamicResource {x:Static ui:ThemeKeys.CardStrokeColorDefaultBrushKey}}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="12,10"
+            RenderTransformOrigin="0,0">
+            <Border.RenderTransform>
+                <ScaleTransform x:Name="ContainerScale" />
+            </Border.RenderTransform>
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="16"
+                    Direction="270"
+                    Opacity="0.25"
+                    ShadowDepth="3"
+                    Color="Black" />
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 原文与类型标签 -->
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,4">
+                    <TextBlock
+                        x:Name="SourceText"
+                        FontSize="11"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        TextTrimming="CharacterEllipsis"
+                        MaxHeight="32" />
+                </StackPanel>
+
+                <!-- 快速复制按钮 -->
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Width="24"
+                    Height="24"
+                    Padding="0"
+                    Click="CopyButton_Click"
+                    Cursor="Hand"
+                    Style="{DynamicResource SubtleButtonStyle}"
+                    ToolTip="复制译文">
+                    <ui:FontIcon FontSize="12" Icon="{x:Static ui:FluentSystemIcons.Copy_16_Regular}" />
+                </Button>
+
+                <!-- 译文主体 -->
+                <TextBlock
+                    x:Name="TranslatedText"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    TextWrapping="Wrap"
+                    MaxHeight="200" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

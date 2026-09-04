@@ -49,7 +49,8 @@ internal static class ImageTranslateTextOverlayLayout
         OcrLayoutBlock block,
         Rect boundingRect,
         Func<double, Rect, bool, Size> measureText,
-        ImageTranslateOverlayTheme overlayTheme = ImageTranslateOverlayTheme.Light)
+        ImageTranslateOverlayTheme overlayTheme = ImageTranslateOverlayTheme.Light,
+        (Color BackgroundColor, Color ForegroundColor)? customColors = null)
     {
         var lineRects = block.LineBoxPoints
             .Select(BoxPointLayout.BoundingRect)
@@ -96,7 +97,7 @@ internal static class ImageTranslateTextOverlayLayout
         }
 
         var overlayRect = textClipRect;
-        var (overlayBackgroundColor, foregroundColor) = SelectOverlayColors(overlayTheme);
+        var (overlayBackgroundColor, foregroundColor) = customColors ?? SelectOverlayColors(overlayTheme);
         var cornerRadius = Math.Clamp(lineHeight * 0.18, 3, 8);
         var renderLineHeight = renderAsMultiLine
             ? CreateRegionFillLineHeight(fontSize, fitRect, shouldTrim, measureText)

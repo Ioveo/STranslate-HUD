@@ -17,6 +17,45 @@
     mc:Ignorable="d">
 
     <ikw:SimpleStackPanel Spacing="12">
+        <!--  服务商快捷预设  -->
+        <ui:SettingsCard Description="一键填充常见大模型服务商的官方接口地址与推荐模型列表" Header="常用服务商预设">
+            <ui:SettingsCard.HeaderIcon>
+                <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Sparkle_24_Regular}" />
+            </ui:SettingsCard.HeaderIcon>
+            <WrapPanel Orientation="Horizontal">
+                <Button
+                    Margin="0,0,6,4"
+                    Command="{Binding ApplyPresetCommand}"
+                    CommandParameter="DeepSeek"
+                    Content="DeepSeek" />
+                <Button
+                    Margin="0,0,6,4"
+                    Command="{Binding ApplyPresetCommand}"
+                    CommandParameter="SiliconFlow"
+                    Content="硅基流动" />
+                <Button
+                    Margin="0,0,6,4"
+                    Command="{Binding ApplyPresetCommand}"
+                    CommandParameter="Ollama"
+                    Content="Ollama (本地)" />
+                <Button
+                    Margin="0,0,6,4"
+                    Command="{Binding ApplyPresetCommand}"
+                    CommandParameter="OpenAI"
+                    Content="OpenAI" />
+                <Button
+                    Margin="0,0,6,4"
+                    Command="{Binding ApplyPresetCommand}"
+                    CommandParameter="DashScope"
+                    Content="通义千问" />
+                <Button
+                    Margin="0,0,6,4"
+                    Command="{Binding ApplyPresetCommand}"
+                    CommandParameter="Moonshot"
+                    Content="Kimi" />
+            </WrapPanel>
+        </ui:SettingsCard>
+
         <!--  API 模式配置  -->
         <ui:SettingsCard Description="{DynamicResource STranslate_Plugin_Translate_OpenAI_ApiMode_Description}" Header="{DynamicResource STranslate_Plugin_Translate_OpenAI_ApiMode}">
             <ui:SettingsCard.HeaderIcon>

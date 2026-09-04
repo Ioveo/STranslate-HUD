@@ -32,6 +32,8 @@ public partial class HotkeySettings : ObservableObject
     public GlobalHotkey SilentTtsHotkey { get; set; } = new(Constant.EmptyHotkey);
     public GlobalHotkey OcrHotkey { get; set; } = new("Alt + Shift + S");
     public GlobalHotkey ClipboardMonitorHotkey { get; set; } = new(Constant.EmptyHotkey);
+    public GlobalHotkey HoverTranslateHotkey { get; set; } = new("Alt + H");
+    public GlobalHotkey LiveHudTranslateHotkey { get; set; } = new("Alt + Shift + H");
 
     #region Software Hotkeys - MainWindow
 
@@ -81,6 +83,8 @@ public partial class HotkeySettings : ObservableObject
         CreateGlobalHotkeyData(SilentTtsHotkey.Key, "Hotkey_SilentTts", () => SilentTtsHotkey.Key = Constant.EmptyHotkey),
         CreateGlobalHotkeyData(OcrHotkey.Key, "Hotkey_Ocr", () => OcrHotkey.Key = Constant.EmptyHotkey),
         CreateGlobalHotkeyData(ClipboardMonitorHotkey.Key, "Hotkey_ClipboardMonitor", () => ClipboardMonitorHotkey.Key = Constant.EmptyHotkey),
+        CreateGlobalHotkeyData(HoverTranslateHotkey.Key, "Hotkey_HoverTranslate", () => HoverTranslateHotkey.Key = Constant.EmptyHotkey),
+        CreateGlobalHotkeyData(LiveHudTranslateHotkey.Key, "Hotkey_LiveHudTranslate", () => LiveHudTranslateHotkey.Key = Constant.EmptyHotkey),
 
         // MainWindow
         new RegisteredHotkeyData(OpenSettingsHotkey.Key, "Hotkey_OpenSettings", HotkeyType.MainWindow, () => OpenSettingsHotkey.Key = Constant.EmptyHotkey),
@@ -189,6 +193,8 @@ public partial class HotkeySettings : ObservableObject
             [nameof(SilentTtsHotkey)] = "Alt + Shift + G",
             [nameof(OcrHotkey)] = "Alt + Shift + S",
             [nameof(ClipboardMonitorHotkey)] = "Alt + Shift + A",
+            [nameof(HoverTranslateHotkey)] = "Alt + H",
+            [nameof(LiveHudTranslateHotkey)] = "Alt + Shift + H",
             // Software Hotkeys - MainWindow
             [nameof(OpenSettingsHotkey)] = "Ctrl + OemComma",
             [nameof(OpenHistoryHotkey)] = "Ctrl + OemQuestion",
@@ -324,6 +330,8 @@ public partial class HotkeySettings : ObservableObject
         HandleGlobalLogic(nameof(SilentTtsHotkey));
         HandleGlobalLogic(nameof(OcrHotkey));
         HandleGlobalLogic(nameof(ClipboardMonitorHotkey));
+        HandleGlobalLogic(nameof(HoverTranslateHotkey));
+        HandleGlobalLogic(nameof(LiveHudTranslateHotkey));
     }
 
     private void UnregisterHotkeys()
@@ -339,6 +347,8 @@ public partial class HotkeySettings : ObservableObject
         HotkeyManager.Current.Remove(SilentTtsHotkey.Key);
         HotkeyManager.Current.Remove(OcrHotkey.Key);
         HotkeyManager.Current.Remove(ClipboardMonitorHotkey.Key);
+        HotkeyManager.Current.Remove(HoverTranslateHotkey.Key);
+        HotkeyManager.Current.Remove(LiveHudTranslateHotkey.Key);
     }
 
     private void HandleGlobalLogic(string? propertyName)
@@ -406,6 +416,12 @@ public partial class HotkeySettings : ObservableObject
                 break;
             case nameof(ClipboardMonitorHotkey):
                 ClipboardMonitorHotkey.IsConflict = !HotkeyMapper.SetHotkey(ClipboardMonitorHotkey.Key, WithFullscreenCheck(() => MainWindowViewModel.ToggleClipboardMonitorCommand.Execute(null)));
+                break;
+            case nameof(HoverTranslateHotkey):
+                HoverTranslateHotkey.IsConflict = !HotkeyMapper.SetHotkey(HoverTranslateHotkey.Key, WithFullscreenCheck(() => MainWindowViewModel.ToggleHoverTranslateCommand.Execute(null)));
+                break;
+            case nameof(LiveHudTranslateHotkey):
+                LiveHudTranslateHotkey.IsConflict = !HotkeyMapper.SetHotkey(LiveHudTranslateHotkey.Key, WithFullscreenCheck(() => MainWindowViewModel.ToggleLiveHudTranslateCommand.Execute(null)));
                 break;
 
         }

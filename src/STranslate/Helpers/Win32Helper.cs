@@ -272,6 +272,68 @@ public static class Win32Helper
         out uint dpiX,
         out uint dpiY);
 
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool IsWindow(nint hWnd);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool IsIconic(nint hWnd);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool GetWindowRect(nint hWnd, out Windows.Win32.Foundation.RECT lpRect);
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmGetWindowAttribute(nint hwnd, int dwAttribute, out Windows.Win32.Foundation.RECT pvAttribute, int cbAttribute);
+
+    public static void MakeWindowTransparentClickThrough(Window window)
+    {
+        var hwnd = GetWindowHandle(window, ensure: true);
+        var exStyle = (uint)GetWindowStyle(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+        exStyle |= (uint)(WINDOW_EX_STYLE.WS_EX_TRANSPARENT |
+                          WINDOW_EX_STYLE.WS_EX_LAYERED |
+                          WINDOW_EX_STYLE.WS_EX_TOOLWINDOW |
+                          WINDOW_EX_STYLE.WS_EX_NOACTIVATE |
+                          WINDOW_EX_STYLE.WS_EX_TOPMOST);
+        SetWindowStyle(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)exStyle);
+        HideFromAltTab(window);
+    }
+
+    public static void MakeWindowNonActivatingToolWindow(Window window)
+    {
+        var hwnd = GetWindowHandle(window, ensure: true);
+        var exStyle = (uint)GetWindowStyle(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+        exStyle |= (uint)(WINDOW_EX_STYLE.WS_EX_TOOLWINDOW |
+                          WINDOW_EX_STYLE.WS_EX_NOACTIVATE |
+                          WINDOW_EX_STYLE.WS_EX_TOPMOST);
+        SetWindowStyle(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)exStyle);
+        HideFromAltTab(window);
+    }
+
+    public static bool GetTargetWindowBounds(nint hwnd, out System.Drawing.Rectangle bounds)
+    {
+        bounds = default;
+        if (hwnd == 0 || !IsWindow(hwnd))
+            return false;
+
+        const int DWMWA_EXTENDED_FRAME_BOUNDS = 9;
+        if (DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, out Windows.Win32.Foundation.RECT rect, Marshal.SizeOf<Windows.Win32.Foundation.RECT>()) == 0)
+        {
+            bounds = new System.Drawing.Rectangle(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+            if (bounds.Width > 0 && bounds.Height > 0)
+                return true;
+        }
+
+        if (GetWindowRect(hwnd, out rect))
+        {
+            bounds = new System.Drawing.Rectangle(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+            return bounds.Width > 0 && bounds.Height > 0;
+        }
+
+        return false;
+    }
+
     #endregion
 
     #region Window WndProc

@@ -40,6 +40,14 @@ public partial class TranslateService : BaseService
     {
         ReplaceService = Services.FirstOrDefault(s => s.ServiceID == _serviceSettings.ReplaceSvcID);
         ImageTranslateService = Services.FirstOrDefault(s => s.ServiceID == _serviceSettings.ImageTranslateSvcID);
+        if (ImageTranslateService == null)
+        {
+            var defaultImTran = Services.FirstOrDefault(s => s.IsEnabled && s.Plugin is ITranslatePlugin and not IDictionaryPlugin);
+            if (defaultImTran != null)
+            {
+                ActiveImTran(defaultImTran);
+            }
+        }
     }
 
     public override async Task<bool> DeleteAsync(Service service)
@@ -59,6 +67,36 @@ public partial class TranslateService : BaseService
         }
 
         return result;
+    }
+
+    public ITranslatePlugin? GetActiveOrFallbackTranslator()
+    {
+        var active = GetActiveSvc<ITranslatePlugin>();
+        if (active != null) return active;
+
+        // 若当前未启用任何翻译服务，查找第一个可用的预装翻译插件并自动激活
+        var fallbackMeta = Plugins.FirstOrDefault(p => p.PluginType != null && typeof(ITranslatePlugin).IsAssignableFrom(p.PluginType));
+        if (fallbackMeta != null)
+        {
+            var svc = AddFromPlugin(fallbackMeta);
+            svc.IsEnabled = true;
+            return svc.Plugin as ITranslatePlugin;
+        }
+
+        return null;
+    }
+
+    public Service? GetImageTranslateServiceOrDefault()
+    {
+        if (ImageTranslateService != null && ImageTranslateService.IsEnabled && ImageTranslateService.Plugin is ITranslatePlugin and not IDictionaryPlugin)
+            return ImageTranslateService;
+
+        var fallback = Services.FirstOrDefault(s => s.IsEnabled && s.Plugin is ITranslatePlugin and not IDictionaryPlugin);
+        if (fallback != null && ImageTranslateService == null)
+        {
+            ActiveImTran(fallback);
+        }
+        return fallback ?? ImageTranslateService;
     }
 
     internal void ActiveImTran(Service svc)

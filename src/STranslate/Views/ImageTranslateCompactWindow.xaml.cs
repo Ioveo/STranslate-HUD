@@ -104,6 +104,26 @@ public partial class ImageTranslateCompactWindow
         base.OnClosing(e);
     }
 
+    protected override void OnPreviewKeyDown(System.Windows.Input.KeyEventArgs e)
+    {
+        base.OnPreviewKeyDown(e);
+        if (e.Key == System.Windows.Input.Key.Space && !e.IsRepeat)
+        {
+            _viewModel.IsPeekingOriginal = true;
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnPreviewKeyUp(System.Windows.Input.KeyEventArgs e)
+    {
+        base.OnPreviewKeyUp(e);
+        if (e.Key == System.Windows.Input.Key.Space)
+        {
+            _viewModel.IsPeekingOriginal = false;
+            e.Handled = true;
+        }
+    }
+
     protected override void OnClosed(EventArgs e)
     {
         // 主动拆解视觉树：移除 NoticeBar、SnackbarContainer 等控件并清空 Content、InputBindings，

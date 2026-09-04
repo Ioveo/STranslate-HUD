@@ -100,7 +100,7 @@ internal static class OpenAIProtocol
 
         var errorMessage = GetErrorMessage(parsedData);
         if (!string.IsNullOrWhiteSpace(errorMessage))
-            return new OpenAIStreamEvent(null, errorMessage);
+            return new OpenAIStreamEvent(null, null, errorMessage);
 
         var choices = parsedData["choices"] as JsonArray;
         var textDelta = apiMode switch
@@ -114,9 +114,15 @@ internal static class OpenAIProtocol
             _ => null
         };
 
-        return string.IsNullOrEmpty(textDelta)
-            ? default
-            : new OpenAIStreamEvent(textDelta, null);
+        var reasoningDelta = choices is { Count: > 0 }
+            ? (choices[0]?["delta"]?["reasoning_content"]?.ToString()
+               ?? choices[0]?["delta"]?["reasoning"]?.ToString())
+            : null;
+
+        if (string.IsNullOrEmpty(textDelta) && string.IsNullOrEmpty(reasoningDelta))
+            return default;
+
+        return new OpenAIStreamEvent(textDelta, reasoningDelta, null);
     }
 
     private static string? GetErrorMessage(JsonNode parsedData)
@@ -131,4 +137,5 @@ internal static class OpenAIProtocol
     }
 }
 
-internal readonly record struct OpenAIStreamEvent(string? TextDelta, string? ErrorMessage);
+internal readonly record struct OpenAIStreamEvent(string? TextDelta, string? ReasoningDelta, string? ErrorMessage);
+

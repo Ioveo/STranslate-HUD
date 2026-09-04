@@ -35,6 +35,7 @@
     <Project Path="Plugins/STranslate.Plugin.Translate.Youdao/STranslate.Plugin.Translate.Youdao.csproj" />
 
     <!-- OCR 插件 -->
+    <Project Path="Plugins/STranslate.Plugin.Ocr.WindowsMedia/STranslate.Plugin.Ocr.WindowsMedia.csproj" />
     <Project Path="Plugins/STranslate.Plugin.Ocr.Baidu/STranslate.Plugin.Ocr.Baidu.csproj" />
     <Project Path="Plugins/STranslate.Plugin.Ocr.OpenAI/STranslate.Plugin.Ocr.OpenAI.csproj" />
     <Project Path="Plugins/STranslate.Plugin.Ocr.WeChatBuiltIn/STranslate.Plugin.Ocr.WeChatBuiltIn.csproj" />
@@ -44,6 +45,7 @@
     <Project Path="Plugins/STranslate.Plugin.Ocr.OcrSpace/STranslate.Plugin.Ocr.OcrSpace.csproj" />
 
     <!-- 其他插件 -->
+    <Project Path="Plugins/STranslate.Plugin.Tts.WindowsMedia/STranslate.Plugin.Tts.WindowsMedia.csproj" />
     <Project Path="Plugins/STranslate.Plugin.Tts.MicrosoftEdge/STranslate.Plugin.Tts.MicrosoftEdge.csproj" />
     <Project Path="Plugins/STranslate.Plugin.Vocabulary.Eudict/STranslate.Plugin.Vocabulary.Eudict.csproj" />
   </Folder>
